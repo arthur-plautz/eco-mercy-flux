@@ -1,4 +1,5 @@
 resource "aws_db_instance" "eco_mercy" {
+  identifier           = "eco-mercy"
   allocated_storage    = 10
   engine               = "postgres"
   engine_version       = "11.9"
