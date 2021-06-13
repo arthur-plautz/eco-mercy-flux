@@ -1,0 +1,8 @@
+[
+    {
+        "image": "arthurplautz/general-embulk:0.1",
+        "name": "embulk_load",
+        "memory": 128,
+        "essential": true
+    }
+]
