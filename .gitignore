@@ -130,3 +130,7 @@ dmypy.json
 
 # Terraform
 .terraform
+
+# Airflow Stuff
+airflow/logs
+airflow/plugins

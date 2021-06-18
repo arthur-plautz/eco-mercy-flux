@@ -13,5 +13,5 @@ fi
 # Convert Embulk Config to generate seed.yml
 python3 converter.py
 
-~/.embulk/bin/embulk guess seed.yml
+~/.embulk/bin/embulk guess seed.yml -o config.yml
 ~/.embulk/bin/embulk run config.yml
