@@ -9,17 +9,17 @@ from airflow import DAG
 from airflow.operators.docker_operator import DockerOperator
 from airflow.utils.dates import days_ago
 
-from airflow.dags.variables import *
+from dags.variables import *
 
+docker_location = 'unix://var/run/docker.sock'
 default_email = 'atr.plautz@gmail.com'
 tags = 'shopee'
-target_file = "{{ ds }}".replace('-','_')
+target_file = "{{ ds }}"
 
 crawler_config = {
     'run': crawler_operation,
     'model': crawler_model,
     'search': crawler_search,
-    'filters': crawler_filters,
     's3_bucket': target_bucket,
     'output': target_file
 }
@@ -39,6 +39,11 @@ embulk_config = {
         'to_column': {
             'name': 'extraction_date',
             'type': 'timestamp'
+        },
+        'from_value': {
+            'mode': 'fixed_time',
+            'value': target_file,
+            'timestamp_format': '%Y-%m-%d'
         }
     }],
     'out': {
@@ -74,6 +79,7 @@ with DAG(
     crawler = DockerOperator(
         task_id='crawler_data_extraction',
         image='arthurplautz/eco-mercy-scrapers:0.1',
+        docker_url=docker_location,
         network_mode="bridge",
         do_xcom_push=False,
         api_version='auto',
@@ -90,6 +96,7 @@ with DAG(
     embulk = DockerOperator(
         task_id='crawler_data_load',
         image='arthurplautz/general-embulk:0.1',
+        docker_url=docker_location,
         network_mode="bridge",
         api_version='auto',
         do_xcom_push=False,
